@@ -6,6 +6,9 @@ import "hardhat/console.sol";
 contract UserContract {
     constructor() payable {}
 
+    event FundsDeposited(address user, uint256 amount);
+    event ProfileUpdated(address user);
+
     struct User {
         string name;
         uint256 age;
@@ -16,6 +19,7 @@ contract UserContract {
     function setUserDetails(string calldata name, uint256 age) public {
         user[msg.sender].name = name;
         user[msg.sender].age = age;
+        emit ProfileUpdated(msg.sender);
     }
 
     function getUserDetail() public view returns (User memory) {
@@ -26,6 +30,7 @@ contract UserContract {
 
     function deposit(uint256 amount) public {
         balance[msg.sender] = balance[msg.sender] + amount;
+        emit FundsDeposited(msg.sender, amount);
     }
 
     function checkBalance() public view returns (uint256) {
