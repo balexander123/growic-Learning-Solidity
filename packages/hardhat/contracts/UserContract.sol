@@ -2,10 +2,13 @@ pragma solidity >=0.8.0 <0.9.0;
 //SPDX-License-Identifier: MIT
 
 import "hardhat/console.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract UserContract is Ownable {
-    constructor() payable {}
+contract UserContract {
+    constructor() payable {
+        owner = msg.sender;
+    }
+
+    address owner;
 
     uint256 constant Fee = 1;
 
@@ -36,7 +39,7 @@ contract UserContract is Ownable {
     function deposit(uint256 _amount) public payable sufficientBalance(_amount) {
         balance[msg.sender] = balance[msg.sender] + _amount;
         // tranfers funds to contract owner
-        payable(owner()).transfer(_amount);
+        payable(owner).transfer(_amount);
     }
 
     // require a previous deposit
@@ -55,6 +58,12 @@ contract UserContract is Ownable {
         address payable to = payable(msg.sender);
         to.transfer(balance[msg.sender]);
         balance[msg.sender] = 0;
+    }
+
+    // require only owner 
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
     }
 
     // require a previous deposit
@@ -77,6 +86,6 @@ contract UserContract is Ownable {
         validAmount(_amount)
     {
         balance[msg.sender] = balance[msg.sender] + _amount;
-        payable(owner()).transfer(_amount);
+        payable(owner).transfer(_amount);
     }
 }
