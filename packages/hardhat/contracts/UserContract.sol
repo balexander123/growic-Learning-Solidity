@@ -41,11 +41,11 @@ contract UserContract {
     event FundsDeposited(address user, uint256 amount);
 
     // deposit amount for message sender
-    function deposit(uint256 _amount) public payable sufficientBalance(_amount) {
-        balance[msg.sender] = balance[msg.sender] + _amount;
+    function deposit() public payable sufficientBalance(msg.value) {
+        balance[msg.sender] = balance[msg.sender] + msg.value;
         // tranfers funds to contract owner
-        payable(owner).transfer(_amount);
-        emit FundsDeposited(msg.sender, _amount);
+        payable(owner).transfer(msg.value);
+        emit FundsDeposited(msg.sender, msg.value);
     }
 
     // require a previous deposit
