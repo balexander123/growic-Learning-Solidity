@@ -94,4 +94,10 @@ contract UserContract {
         balance[msg.sender] = balance[msg.sender] + _amount;
         payable(owner).transfer(_amount);
     }
+
+    // fallback function to receive Ether
+    fallback() external payable {
+        // send / transfer (forwards 2300 gas to this fallback function)
+        // call (forwards all of the gas)
+    }
 }
